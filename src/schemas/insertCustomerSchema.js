@@ -1,9 +1,8 @@
-import joi, { date, string } from "joi";
+import joi from "joi";
 
-
-insertCustomerSchema = joi.object({
+export const insertCustomerSchema = joi.object({
     name: joi.string().required(),
     phone: joi.string().min(10).max(11).required(),
     cpf: joi.string().min(11).max(11).required(),
-    birthday: joi.string().validate(date)
+    birthday: joi.string()
 })

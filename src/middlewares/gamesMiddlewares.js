@@ -11,7 +11,7 @@ export async function insertGameValidation(req, res, next){
         }
         nameExists.rows.forEach((n) =>{
             if (n.name === name){
-                return res.status(400).send("nome já existe");
+                return res.status(409).send("nome já existe");
             }
         })
     if (!name || stockTotal === 0 || pricePerDay === 0 ){

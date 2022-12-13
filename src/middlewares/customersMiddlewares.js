@@ -21,6 +21,7 @@ export async function checkIfUserExists(req, res, next) {
     const { id } = req.params;
 
     const customer = await connectionDB.query('SELECT * FROM customers WHERE customers.id = $1', [id])
+    console.log(customer)
     if (customer.rows[0] === undefined) {
         return res.sendStatus(404);
     }

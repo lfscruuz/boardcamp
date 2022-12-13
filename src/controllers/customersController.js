@@ -1,17 +1,39 @@
 import { connectionDB } from "../database/db.js";
+import { insertCustomerSchema } from "../schemas/insertCustomerSchema.js";
 
 export async function listCustomers(req, res) {
+    const { cpf } = req.query;
+
     try {
-        const customers = await connectionDB.query('SELECT * FROM customers');
-        res.send(customers.rows);
+        if (cpf !== undefined){
+            const customers = await connectionDB.query(`SELECT * FROM customers WHERE customers."cpf" LIKE '${cpf}%'`);
+            res.send(customers.rows);
+        } else {
+            const customers = await connectionDB.query('SELECT * FROM customers');
+            res.send(customers.rows);
+        }
     } catch (error) {
+        console.log(error)
         res.sendStatus(500);
     }
 }
 
 export async function insertCustomer(req, res) {
     const { name, phone, cpf, birthday } = req.body;
+    const user = {
+        name,
+        phone,
+        cpf,
+        birthday
+    }
 
+    const validation = insertCustomerSchema.validate(user, { abortEarly: false })
+
+    if (validation.error) {
+        const erros = validation.error.details.map((detail) => detail.message);
+        res.status(422).send(erros);
+        return;
+    }
     try {
 
         await connectionDB.query(
@@ -45,7 +67,20 @@ export async function updateCustomer(req, res) {
     const { name, phone, cpf, birthday } = req.body;
     const { id } = req.params;
     const customer = req.customer;
+    const user = {
+        name,
+        phone,
+        cpf,
+        birthday
+    }
 
+    const validation = insertCustomerSchema.validate(user, { abortEarly: false })
+
+    if (validation.error) {
+        const erros = validation.error.details.map((detail) => detail.message);
+        res.status(422).send(erros);
+        return;
+    }
 
     if (customer.rows[0].cpf === cpf){
         return res.sendStatus(409);
