@@ -1,49 +1,143 @@
 import dayjs from "dayjs";
 import { connectionDB } from "../database/db.js";
 
-export async function listRentals(req, res, next){
-
+export async function listRentals(req, res, next) {
+    const { customerId } = req.query;
+    const { gameId } = req.query;
     try {
-        const rental = await connectionDB.query('SELECT rentals.*, customers."id" AS "customerId", customers."name" AS "customerName", customers."phone", customers."cpf", customers."birthday", games."id" AS "gameId", games."name" AS "gameName", games."image", games."stockTotal", games."categoryId", games."pricePerDay" FROM rentals JOIN customers ON rentals."customerId" = customers."id" JOIN games ON rentals."gameId" = games."id"');
-        
-        const rentalList = [];
-        
-        rental.rows.forEach((r) =>{
-            rentalList.push({
-                id: r.id,
-                customerId: r.customerId,
-                gameId: r.gameId,
-                rentDate: r.rentDate,
-                daysRented: r.daysRented,
-                returnDate: r.returnDate,
-                originalPrice: r.originalPrice,
-                delayFee: r.delayFee,
-                customer: {
-                    id: r.customerId,
-                    name: r.customerName
-                },
-                game: {
-                    id: r.gameId,
-                    name: r.gameName,
-                    categoryId: r.categoryId,
-                    categoryName: r.categoryName
-                }
-            }
-        )})
+        if (customerId !== undefined) {
+            const rental = await connectionDB.query('SELECT rentals.*, customers."id" AS "customerId", customers."name" AS "customerName", customers."phone", customers."cpf", customers."birthday", games."id" AS "gameId", games."name" AS "gameName", games."image", games."stockTotal", games."categoryId", games."pricePerDay" FROM rentals JOIN customers ON rentals."customerId" = customers."id" JOIN games ON rentals."gameId" = games."id" WHERE customers."id" = $1', [customerId]);
 
-        res.send(rentalList);
+            const rentalList = [];
+
+            rental.rows.forEach((r) => {
+                rentalList.push({
+                    id: r.id,
+                    customerId: r.customerId,
+                    gameId: r.gameId,
+                    rentDate: r.rentDate,
+                    daysRented: r.daysRented,
+                    returnDate: r.returnDate,
+                    originalPrice: r.originalPrice,
+                    delayFee: r.delayFee,
+                    customer: {
+                        id: r.customerId,
+                        name: r.customerName
+                    },
+                    game: {
+                        id: r.gameId,
+                        name: r.gameName,
+                        categoryId: r.categoryId,
+                        categoryName: r.categoryName
+                    }
+                }
+                )
+            })
+
+            res.send(rentalList);
+        } else if (customerId === undefined){
+            const rental = await connectionDB.query('SELECT rentals.*, customers."id" AS "customerId", customers."name" AS "customerName", customers."phone", customers."cpf", customers."birthday", games."id" AS "gameId", games."name" AS "gameName", games."image", games."stockTotal", games."categoryId", games."pricePerDay" FROM rentals JOIN customers ON rentals."customerId" = customers."id" JOIN games ON rentals."gameId" = games."id"');
+
+            const rentalList = [];
+
+            rental.rows.forEach((r) => {
+                rentalList.push({
+                    id: r.id,
+                    customerId: r.customerId,
+                    gameId: r.gameId,
+                    rentDate: r.rentDate,
+                    daysRented: r.daysRented,
+                    returnDate: r.returnDate,
+                    originalPrice: r.originalPrice,
+                    delayFee: r.delayFee,
+                    customer: {
+                        id: r.customerId,
+                        name: r.customerName
+                    },
+                    game: {
+                        id: r.gameId,
+                        name: r.gameName,
+                        categoryId: r.categoryId,
+                        categoryName: r.categoryName
+                    }
+                }
+                )
+            })
+
+            res.send(rentalList);
+        } else if (gameId !== undefined) {
+            const rental = await connectionDB.query('SELECT rentals.*, customers."id" AS "customerId", customers."name" AS "customerName", customers."phone", customers."cpf", customers."birthday", games."id" AS "gameId", games."name" AS "gameName", games."image", games."stockTotal", games."categoryId", games."pricePerDay" FROM rentals JOIN customers ON rentals."customerId" = customers."id" JOIN games ON rentals."gameId" = games."id" WHERE games."id" = $1', [customerId]);
+
+            const rentalList = [];
+
+            rental.rows.forEach((r) => {
+                rentalList.push({
+                    id: r.id,
+                    customerId: r.customerId,
+                    gameId: r.gameId,
+                    rentDate: r.rentDate,
+                    daysRented: r.daysRented,
+                    returnDate: r.returnDate,
+                    originalPrice: r.originalPrice,
+                    delayFee: r.delayFee,
+                    customer: {
+                        id: r.customerId,
+                        name: r.customerName
+                    },
+                    game: {
+                        id: r.gameId,
+                        name: r.gameName,
+                        categoryId: r.categoryId,
+                        categoryName: r.categoryName
+                    }
+                }
+                )
+            })
+
+            res.send(rentalList);
+        } else {
+            const rental = await connectionDB.query('SELECT rentals.*, customers."id" AS "customerId", customers."name" AS "customerName", customers."phone", customers."cpf", customers."birthday", games."id" AS "gameId", games."name" AS "gameName", games."image", games."stockTotal", games."categoryId", games."pricePerDay" FROM rentals JOIN customers ON rentals."customerId" = customers."id" JOIN games ON rentals."gameId" = games."id"');
+
+            const rentalList = [];
+
+            rental.rows.forEach((r) => {
+                rentalList.push({
+                    id: r.id,
+                    customerId: r.customerId,
+                    gameId: r.gameId,
+                    rentDate: r.rentDate,
+                    daysRented: r.daysRented,
+                    returnDate: r.returnDate,
+                    originalPrice: r.originalPrice,
+                    delayFee: r.delayFee,
+                    customer: {
+                        id: r.customerId,
+                        name: r.customerName
+                    },
+                    game: {
+                        id: r.gameId,
+                        name: r.gameName,
+                        categoryId: r.categoryId,
+                        categoryName: r.categoryName
+                    }
+                }
+                )
+            })
+
+            res.send(rentalList);
+        }
     } catch (error) {
         console.log(error);
         return res.sendStatus(500);
     }
 }
 
-export async function insertRental(req, res){
-    const {customerId, gameId, daysRented} = req.body;
+export async function insertRental(req, res) {
+    const { customerId, gameId, daysRented } = req.body;
     const rentDate = dayjs().format("YYYY/MM/DD");
     let pricePerDay, originalPrice = 0;
 
-    if (daysRented <= 0){
+    if (daysRented <= 0) {
         return res.sendStatus(400);
     }
 
@@ -53,7 +147,7 @@ export async function insertRental(req, res){
         const gameStock = await connectionDB.query('SELECT "stockTotal" FROM games WHERE id = $1', [gameId]);
         const totalInStock = gameStock.rows[0].stockTotal;
 
-        if (totalRentals >= totalInStock){
+        if (totalRentals >= totalInStock) {
             return res.sendStatus(400);
         }
 
@@ -64,17 +158,17 @@ export async function insertRental(req, res){
 
     try {
         const gameExists = await connectionDB.query('SELECT * FROM games WHERE id = $1', [gameId]);
-        if (gameExists.rows[0] === undefined){
+        if (gameExists.rows[0] === undefined) {
             return res.sendStatus(400);
         }
     } catch (error) {
-        console;log(error);
+        console; log(error);
         return res.sendStatus(500)
     }
 
     try {
         const customerExists = await connectionDB.query('SELECT * FROM customers WHERE id = $1', [customerId]);
-        if (customerExists.rows[0] === undefined){
+        if (customerExists.rows[0] === undefined) {
             return res.sendStatus(400);
         }
     } catch (error) {
@@ -93,7 +187,7 @@ export async function insertRental(req, res){
 
     try {
 
-        await connectionDB.query('INSERT INTO rentals ("customerId", "gameId", "rentDate", "daysRented", "originalPrice") VALUES ($1, $2, $3, $4, $5)', 
+        await connectionDB.query('INSERT INTO rentals ("customerId", "gameId", "rentDate", "daysRented", "originalPrice") VALUES ($1, $2, $3, $4, $5)',
             [customerId, gameId, rentDate, daysRented, originalPrice]
         );
         res.sendStatus(201);
@@ -103,12 +197,12 @@ export async function insertRental(req, res){
     }
 }
 
-export async function returnRental(req, res){
+export async function returnRental(req, res) {
     const { id } = req.params;
     const returnDate = dayjs().format("YYYY/MM/DD");
     try {
         const rental = await connectionDB.query('SELECT * FROM rentals WHERE id = $1', [id]);
-        if (rental.rows[0].delayFee !== null || rental.rows[0].returnDate !== null ){
+        if (rental.rows[0].delayFee !== null || rental.rows[0].returnDate !== null) {
             return res.sendStatus(400)
         }
         const delay = Math.floor(dayjs().diff(returnDate, rental.rows[0].rentDate) / 86400000);
@@ -116,15 +210,26 @@ export async function returnRental(req, res){
 
         await connectionDB.query('UPDATE rentals SET "returnDate" = $1, "delayFee" = $2 WHERE id = $3', [returnDate, delayFee, id]);
 
-        res.send(200);
+        res.sendStatus(200);
     } catch (error) {
         console.log(error);
+        res.sendStatus(500);
     }
-
 }
 
-export async function removeRental(req, res){
+export async function removeRental(req, res) {
     const { id } = req.params;
-    await connectionDB.query('DELETE FROM rentals WHERE id = $1', [id]);
-    res.sendStatus(200);
+    try {
+
+        const rental = await connectionDB.query('SELECT "returnDate" FROM rentals WHERE id = $1', [id]);
+
+        if (rental.rows[0].returnDate === null) {
+            return res.sendStatus(400);
+        }
+        await connectionDB.query('DELETE FROM rentals WHERE id = $1', [id]);
+        res.sendStatus(200);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
 }
