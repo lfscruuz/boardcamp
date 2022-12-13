@@ -7,11 +7,11 @@ export async function insertGameValidation(req, res, next){
     const nameExists = await connectionDB.query('SELECT "name" FROM games');
     
         if (idExists.rows[0] === undefined){
-            return res.sendStatus(400);
+            return res.status(400).send("id não existe");
         }
         nameExists.rows.forEach((n) =>{
             if (n.name === name){
-                return res.status(409);
+                return res.status(400).send("nome já existe");
             }
         })
     if (!name || stockTotal === 0 || pricePerDay === 0 ){

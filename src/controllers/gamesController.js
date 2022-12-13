@@ -1,7 +1,7 @@
 import { connectionDB } from "../database/db.js";
 
 export async function listGames(req, res) {
-    const games = await connectionDB.query('SELECT games."name", games."image", games."stockTotal", games."categoryId", games."pricePerDay", categories."name" AS categoryName FROM games JOIN categories ON games."categoryId" = categories.id');
+    const games = await connectionDB.query('SELECT games."id", games."name", games."image", games."stockTotal", games."categoryId", games."pricePerDay", categories."name" AS categoryName FROM games JOIN categories ON games."categoryId" = categories.id');
     res.send(games.rows);
 }
 
